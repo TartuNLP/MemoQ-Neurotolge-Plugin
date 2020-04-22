@@ -8,6 +8,14 @@ namespace TartuNLP
 {
     class ConfigJSON
     {
-        public IDictionary<string, string[]> lang_dom_sup { get; set; }
+        public string domain { get; set; }
+        public OptionsJSON[] options { get; set; }
+    }
+
+    class OptionsJSON
+    {
+        public string odomain { get; set; }
+        public string name { get; set; }
+        public string[] lang { get; set; }
     }
 }

@@ -7,6 +7,7 @@ using System.Text;
 using System.Web;
 using System.Web.Script.Serialization;
 using TartuNLPInterface;
+using System.Runtime.Serialization.Json;
 
 namespace TartuNLP
 {
@@ -49,13 +50,18 @@ namespace TartuNLP
 
         //    return TokenCode;
         //}
-        public static IDictionary<string,string[]> getConfig(string url, string auth)
+        public static IDictionary<string, string[]> getConfig(string url, string auth)
         {
             HttpClient client = new HttpClient();
             HttpContent inputContent = new StringContent("application/json");
-            HttpResponseMessage response = client.PostAsync(url + "conf?auth=" + auth, inputContent).Result;
+            HttpResponseMessage response = client.PostAsync(url + "/support?auth=" + auth, inputContent).Result;
             var JSONResponse = new JavaScriptSerializer().Deserialize<ConfigJSON>(response.Content.ReadAsStringAsync().Result);
-            return JSONResponse.lang_dom_sup;
+            IDictionary<string, string[]> testing = new Dictionary<string, string[]>();
+            foreach (OptionsJSON option in JSONResponse.options) {
+                string[] langs = (option.name + "," + string.Join(",", option.lang)).Split(',');
+                testing.Add(option.odomain, langs);
+            }
+            return testing;
 
         }
 
@@ -110,23 +116,18 @@ namespace TartuNLP
         /// <returns>The translated string.</returns>
         public static string Translate(TartuNLPOptions options, string input, string srcLangCode, string trgLangCode)
         {
-            // Always dispose allocated resources
-            // var proxy = getNewProxy();
-            // using (proxy as IDisposable)
-            //{
-            //    string result = proxy.Translate(GetTokenCode(options), input, srcLangCode, trgLangCode);
-            //    return result;
-            //}
-            if (input.Contains("|"))
-                input = StringReplace(input, "|", "&pipe;");
+
             HttpClient client = new HttpClient();
-            HttpContent inputContent = new StringContent("application/json");
-            HttpResponseMessage response = client.PostAsync(options.SecureSettings.URL + "?src=" + HttpUtility.UrlEncode(input) + "&engine=etenlv&auth=" + options.SecureSettings.Auth + "&conf=" + trgLangCode + ","+options.GeneralSettings.SelectedDomain, inputContent).Result;
+            var content = new Input();
+            content.text = input;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(content);
+            //person.Occupation = "gardener";
+            //var content = @"{'text':" + input + "}";
+
+            //HttpContent inputContent = new StringContent(input);
+            HttpResponseMessage response = client.PostAsync(options.SecureSettings.URL + "?auth=" + options.SecureSettings.Auth + "&olang=" + trgLangCode + "&odomain=" + options.GeneralSettings.SelectedDomain, new StringContent(json, Encoding.UTF8, "application/json")).Result;
             var JSONResponse = new JavaScriptSerializer().Deserialize<JSONResponse>(response.Content.ReadAsStringAsync().Result);
-            if (JSONResponse.tgt.Contains("&pipe;"))
-                return StringReplace(JSONResponse.tgt, "&pipe;", "|");
-            else
-                return JSONResponse.tgt;
+            return JSONResponse.result;
         }
 
         /// <summary>
@@ -137,28 +138,19 @@ namespace TartuNLP
         /// <param name="srcLangCode">The source language code.</param>
         /// <param name="trgLangCode">The target language code.</param>
         /// <returns>The translated strings.</returns>
-        public static List<String>  BatchTranslate(TartuNLPOptions options, List<string> input, string srcLangCode, string trgLangCode)
+        public static List<String> BatchTranslate(TartuNLPOptions options, List<string> input, string srcLangCode, string trgLangCode)
         {
-           
-            for (int line = 0; line < input.Count; line++)
-            {
-                if (input[line].Contains("|"))
-                    input[line] = StringReplace(input[line],"|","&pipe;");  
-            }
-            string batchInput = string.Join("|", input);
-            List<string> translation = new List<string> { };
-            HttpClient client = new HttpClient();
-            HttpContent inputContent = new StringContent("application/json");
-            HttpResponseMessage response = client.PostAsync(options.SecureSettings.URL + "?src=" + HttpUtility.UrlEncode(batchInput) + "&engine=etenlv&auth=" + options.SecureSettings.Auth + "&conf=" + trgLangCode + "," + options.GeneralSettings.SelectedDomain, inputContent).Result;
-            var JSONResponse = new JavaScriptSerializer().Deserialize<JSONResponse>(response.Content.ReadAsStringAsync().Result);
-            translation = JSONResponse.tgt.Split('|').ToList();
-            for (int line = 0; line < translation.Count; line++)
-            {
-                if (translation[line].Contains("&pipe;"))
-                    translation[line] = StringReplace(translation[line], "&pipe;","|");
-            }
 
-            return translation;
+            HttpClient client = new HttpClient();
+            var content = new BatchInput();
+            content.text = input;
+            var json = Newtonsoft.Json.JsonConvert.SerializeObject(content);
+            //var content = "{'text':" + Newtonsoft.Json.JsonConvert.SerializeObject(input) + "}";
+
+            HttpResponseMessage response = client.PostAsync(options.SecureSettings.URL + "?auth=" + options.SecureSettings.Auth + "&olang="+ trgLangCode +"&odomain=" + options.GeneralSettings.SelectedDomain, new StringContent(json, Encoding.UTF8, "application/json")).Result;
+            string test = response.Content.ReadAsStringAsync().Result;
+            var JSONResponse = new JavaScriptSerializer().Deserialize<JSONResponseBatch>(response.Content.ReadAsStringAsync().Result);
+            return JSONResponse.result;
         }
 
         public static string StringReplace(string text, string oldString, string newString) {
@@ -204,6 +196,15 @@ namespace TartuNLP
             return new int[0];
         }
 
-       
+
     }
+
+    class Input{
+        public string text;
+    }
+    class BatchInput
+    {
+        public List<string> text;
+    }
+
 }

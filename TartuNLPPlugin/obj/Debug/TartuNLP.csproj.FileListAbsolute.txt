@@ -12,3 +12,11 @@ C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\TartuNLPPlugin\obj\Debug\TartuN
 C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\TartuNLPPlugin\obj\Debug\TartuNLP.csproj.CopyComplete
 C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\TartuNLPPlugin\obj\Debug\DummyMTPlugin.dll
 C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\TartuNLPPlugin\obj\Debug\DummyMTPlugin.pdb
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\bin\DummyMTPlugin.dll
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\bin\DummyMTPlugin.pdb
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\TartuNLP.csprojAssemblyReference.cache
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\TartuNLP.TartuNLPOptionsForm.resources
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\TartuNLP.csproj.GenerateResource.cache
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\TartuNLP.csproj.CopyComplete
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\DummyMTPlugin.dll
+C:\Users\Daniyal Gohar\Documents\Git Repos\MemoQ-Neurotolge-Plugin\TartuNLPPlugin\obj\Debug\DummyMTPlugin.pdb

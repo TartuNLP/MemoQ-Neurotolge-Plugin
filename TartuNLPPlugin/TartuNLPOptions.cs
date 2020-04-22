@@ -59,7 +59,7 @@ namespace TartuNLP
         /// <summary>
         /// The user name used to be able to use the MT service.
         /// </summary>
-        public string URL = "https://api.neurotolge.ee/v1.1/translate";
+        public string URL = "https://api.tartunlp.ai/v1.2/translate";
         /// <summary>
         /// The password used to be able to use the MT service.
         /// </summary>
