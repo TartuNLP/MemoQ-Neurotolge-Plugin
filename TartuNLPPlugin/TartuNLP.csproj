@@ -7,8 +7,8 @@
     <ProjectGuid>{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
-    <RootNamespace>DummyMTPlugin</RootNamespace>
-    <AssemblyName>DummyMTPlugin</AssemblyName>
+    <RootNamespace>TartuNLP</RootNamespace>
+    <AssemblyName>TartuNLP</AssemblyName>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
