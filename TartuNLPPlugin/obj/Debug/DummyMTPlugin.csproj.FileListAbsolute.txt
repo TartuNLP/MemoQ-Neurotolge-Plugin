@@ -1,8 +1,0 @@
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\bin\DummyMTPlugin.dll
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\bin\DummyMTPlugin.pdb
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.csprojAssemblyReference.cache
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.DummyMTOptionsForm.resources
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.csproj.GenerateResource.cache
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.csproj.CopyComplete
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.dll
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTPlugin\obj\Debug\DummyMTPlugin.pdb

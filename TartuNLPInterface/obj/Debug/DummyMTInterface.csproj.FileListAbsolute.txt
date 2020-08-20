@@ -1,4 +1,0 @@
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\bin\DummyMTInterface.dll
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\bin\DummyMTInterface.pdb
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTInterface\obj\Debug\DummyMTInterface.dll
-C:\Users\Daniyal Gohar\Downloads\MT_SDK_9_1\Code\DummyMTInterface\obj\Debug\DummyMTInterface.pdb

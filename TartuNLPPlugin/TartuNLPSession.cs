@@ -69,6 +69,10 @@ namespace TartuNLP
         public TranslationResult[] TranslateCorrectSegment(Segment[] segs, Segment[] tmSources, Segment[] tmTargets)
         {
             TranslationResult[] results = new TranslationResult[segs.Length];
+            for (int i = 0; i < segs.Length; i++)
+            {
+                results[i] = new TranslationResult();
+            }
 
             try
             {
@@ -76,7 +80,6 @@ namespace TartuNLP
                 int i = 0;
                 foreach (string translation in TartuNLPServiceHelper.BatchTranslate(options, texts, this.srcLangCode, this.trgLangCode))
                 {
-                    results[i] = new TranslationResult();
                     results[i].Translation = createSegmentFromResult(segs[i], translation, options.GeneralSettings.FormattingAndTagUsage);
                     i++;
                 }
