@@ -23,7 +23,7 @@ namespace TartuNLP
             { "CancelButtonText", "Cancel" },
             { "HelpButtonText", "Help" },
             { "CommunicationErrorCaption", "Login error" },
-            { "CommunicationErrorText", "There was an error during the communication with the service.\n\n{0}" },
+            { "CommunicationErrorText", "There was an error during the communication with the service. Please check the URL and authentication token or try again.\n\nError: \n{0}" },
             { "InvalidURLorAuthCaption", "Update error" },
             { "InvalidURLorAuthText", "Invalid URL or Auth." },
             { "NetworkError", "A network error occured ({0})" },
