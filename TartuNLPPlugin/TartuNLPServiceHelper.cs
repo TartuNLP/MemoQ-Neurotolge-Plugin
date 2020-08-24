@@ -116,6 +116,8 @@ namespace TartuNLP
         /// <returns>The translated string.</returns>
         public static string Translate(TartuNLPOptions options, string input, string srcLangCode, string trgLangCode)
         {
+            if(trgLangCode.Contains("-"))
+                trgLangCode = trgLangCode.Split('-')[0];
 
             HttpClient client = new HttpClient();
             var content = new Input();
@@ -140,6 +142,8 @@ namespace TartuNLP
         /// <returns>The translated strings.</returns>
         public static List<String> BatchTranslate(TartuNLPOptions options, List<string> input, string srcLangCode, string trgLangCode)
         {
+            if(trgLangCode.Contains("-"))
+                trgLangCode = trgLangCode.Split('-')[0];
 
             HttpClient client = new HttpClient();
             var content = new BatchInput();
