@@ -106,7 +106,7 @@ namespace TartuNLP
             //    case FormattingAndTagsUsageOption.OnlyFormatting:
                 //    return SegmentHtmlConverter.ConvertSegment2Html(segment, false);
                 //case FormattingAndTagsUsageOption.BothFormattingAndTags:
-                    return SegmentHtmlConverter.ConvertSegment2Html(segment, true);
+                    return SegmentXMLConverter.ConvertSegment2Xml(segment, true);
         //        default:
         //            return segment.PlainText;
         //    }
@@ -114,7 +114,7 @@ namespace TartuNLP
 
         private static Segment createSegmentFromResult(Segment originalSegment, string translatedText, FormattingAndTagsUsageOption formattingAndTagUsage)
         {
-                return SegmentHtmlConverter.ConvertHtml2Segment(translatedText, originalSegment.ITags);
+                return SegmentXMLConverter.ConvertXML2Segment(translatedText, originalSegment.ITags);
         }
 
         #endregion
