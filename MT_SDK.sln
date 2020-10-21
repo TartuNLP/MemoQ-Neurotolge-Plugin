@@ -9,6 +9,8 @@ Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TartuNLP", "TartuNLPPlugin\
 EndProject
 Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TartuNLPInterface", "TartuNLPInterface\TartuNLPInterface.csproj", "{306EB2FC-4576-4B03-9E8A-7FCBE8734379}"
 EndProject
+Project("{FAE04EC0-301F-11D3-BF4B-00C04F79EFBC}") = "TartuNLP.v9.0-2", "TartuNLPPlugin\TartuNLP.v9.0-2.csproj", "{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}"
+EndProject
 Global
 	GlobalSection(SolutionConfigurationPlatforms) = preSolution
 		Debug|Any CPU = Debug|Any CPU
@@ -27,6 +29,10 @@ Global
 		{306EB2FC-4576-4B03-9E8A-7FCBE8734379}.Debug|Any CPU.Build.0 = Debug|Any CPU
 		{306EB2FC-4576-4B03-9E8A-7FCBE8734379}.Release|Any CPU.ActiveCfg = Release|Any CPU
 		{306EB2FC-4576-4B03-9E8A-7FCBE8734379}.Release|Any CPU.Build.0 = Release|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug|Any CPU.ActiveCfg = Debug|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Debug|Any CPU.Build.0 = Debug|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release|Any CPU.ActiveCfg = Release|Any CPU
+		{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}.Release|Any CPU.Build.0 = Release|Any CPU
 	EndGlobalSection
 	GlobalSection(SolutionProperties) = preSolution
 		HideSolutionNode = FALSE

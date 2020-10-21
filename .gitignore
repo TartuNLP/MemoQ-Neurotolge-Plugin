@@ -1,0 +1,7 @@
+﻿/bin/
+/.vs/
+/.idea/
+/TartuNLPInterface/.vs/
+/TartuNLPInterface/obj/
+/TartuNLPPlugin/obj/
+/TestClient/obj/
