@@ -1,5 +1,7 @@
 ﻿using System;
 using System.Linq;
+using System.Net;
+using System.Text.RegularExpressions;
 using MemoQ.Addins.Common.DataStructures;
 using MemoQ.Addins.Common.Utils;
 using MemoQ.MTInterfaces;
@@ -101,20 +103,15 @@ namespace TartuNLP
         /// </summary>
         private string createTextFromSegment(Segment segment, FormattingAndTagsUsageOption formattingAndTagOption)
         {
-            //switch (formattingAndTagOption)
-            //{
-            //    case FormattingAndTagsUsageOption.OnlyFormatting:
-                //    return SegmentHtmlConverter.ConvertSegment2Html(segment, false);
-                //case FormattingAndTagsUsageOption.BothFormattingAndTags:
-                    return SegmentXMLConverter.ConvertSegment2Xml(segment, true);
-        //        default:
-        //            return segment.PlainText;
-        //    }
+            var text = WebUtility.HtmlDecode(SegmentXMLConverter.ConvertSegment2Xml(segment, true));
+            text = Regex.Replace(text, "<spec_char val=\"<\"/>", "<spec_char val=\"&lt;\"/>");
+            text = Regex.Replace(text, "<spec_char val=\">\"/>", "<spec_char val=\"&gt;\"/>");
+            return text;
         }
 
         private static Segment createSegmentFromResult(Segment originalSegment, string translatedText, FormattingAndTagsUsageOption formattingAndTagUsage)
         {
-                return SegmentXMLConverter.ConvertXML2Segment(translatedText, originalSegment.ITags);
+            return SegmentXMLConverter.ConvertXML2Segment(translatedText, originalSegment.ITags);
         }
 
         #endregion

@@ -101,7 +101,6 @@ namespace TartuNLP
         public override Image DisplayIcon
         {
             get {
-                //MemoryStream stream = new MemoryStream(@"DummMTPlugin//TartuNLP_Special.png");
                 String [] test = Assembly.GetExecutingAssembly().GetManifestResourceNames();
                 return Image.FromStream(Assembly.GetExecutingAssembly().GetManifestResourceStream("TartuNLP.TartuNLP.png")); }
         }
