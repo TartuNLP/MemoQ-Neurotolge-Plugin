@@ -14,21 +14,21 @@ namespace TartuNLP
         /// </summary>
         private Dictionary<string, string> defaultTexts = new Dictionary<string, string>()
         {
-            { "OptionsFormCaption", "Tartu NLP plugin settings" },
+            { "OptionsFormCaption", "TartuNLP plugin settings" },
             { "URLLabelText", "URL" },
-            { "AuthLabelText", "Auth" },
+            { "AuthLabelText", "API Key" },
             { "RetrieveLanguagesLinkText", "Check login and retrieve language information"},
             { "SupportedLanguagesLabelText", "Supported languages" },
             { "OkButtonText", "OK" },
             { "CancelButtonText", "Cancel" },
             { "HelpButtonText", "Help" },
             { "CommunicationErrorCaption", "Login error" },
-            { "CommunicationErrorText", "There was an error during the communication with the service. Please check the URL and authentication token or try again.\n\nError: \n{0}" },
+            { "CommunicationErrorText", 
+                "There was an error during the communication with the service. " +
+                "Please check the URL and authentication token or try again.\n\nError: \n{0}" },
             { "InvalidURLorAuthCaption", "Update error" },
             { "InvalidURLorAuthText", "Invalid URL or Auth." },
             { "NetworkError", "A network error occured ({0})" },
-            //{ "PlainTextOnly", "Use plain text only" },
-            //{ "TextAndFormatting", "Use text and formatting" },
             { "FormattingAndTags", "Use both formatting and tags" },
             { "TagsAndFormattingLabelText", "Tags and formatting"},
         };

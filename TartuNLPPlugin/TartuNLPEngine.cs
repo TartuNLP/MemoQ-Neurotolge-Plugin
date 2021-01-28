@@ -5,7 +5,7 @@ using MemoQ.MTInterfaces;
 namespace TartuNLP
 {
     /// <summary>
-    /// Dummy MT engine for a particular language combination.
+    /// MT engine for a particular language combination.
     /// </summary>
     /// <remarks>
     /// Implementation checklist:

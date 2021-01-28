@@ -60,7 +60,7 @@
     <Reference Include="System.Xml" />
   </ItemGroup>
   <ItemGroup>
-    <Compile Include="ConfigJSON.cs" />
+    <Compile Include="EngineConf.cs" />
     <Compile Include="JSONResponse.cs" />
     <Compile Include="TartuNLPEngine.cs" />
     <Compile Include="TartuNLPOptions.cs" />

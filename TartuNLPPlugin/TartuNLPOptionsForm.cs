@@ -1,14 +1,13 @@
 ﻿using MemoQ.MTInterfaces;
 using System;
 using System.Collections.Generic;
-using System.Threading;
 using System.Threading.Tasks;
 using System.Windows.Forms;
 
 namespace TartuNLP
 {
     /// <summary>
-    /// This class represents the options form of the dummy MT plugin.
+    /// This class represents the options form of the MT plugin.
     /// </summary>
     /// <remarks>
     /// Implementation checklist:
@@ -20,17 +19,15 @@ namespace TartuNLP
     /// </remarks>
     public partial class TartuNLPOptionsForm : Form
     {
-        private delegate void LoginDelegate(string userName, string password);
         private IEnvironment environment;
 
         private class LanguageDomainSupport
         {
-            public string URL;
-            public string Auth;
+            public EngineConf EngineConf;
             public bool UpdateSuccessful;
-            public IDictionary<string,string[]> SupportedLanguages;
-            public IDictionary<string, string> SupportedDomains;
-            public IDictionary<string, string[]> JSON;
+            public Dictionary<string, string> SupportedDomains;
+            public Dictionary<string, Dictionary<string, List<string>>> SupportedLanguages;
+            public bool FormattingAndTagUsage;
             public Exception Exception;
         }
 
@@ -53,33 +50,29 @@ namespace TartuNLP
             btnUpdate.Enabled = false;
             tbURL.Text = Options.SecureSettings.URL;
             tbAuth.Text = Options.SecureSettings.Auth;
-            this.btnOK.Enabled = !string.IsNullOrEmpty(Options.SecureSettings.URL);
-            btnHelp.Enabled = isShowHelpSupported();
-            cbFormattingTags.SelectedIndex = (int)Options.GeneralSettings.FormattingAndTagUsage;
+            btnOK.Enabled = !string.IsNullOrEmpty(Options.SecureSettings.URL);
             cbDomain.Items.Clear();
-            IDictionary<string, string> domains = new Dictionary<string, string>();
-            foreach (string dom in Options.GeneralSettings.Domains) 
+            if (Options.GeneralSettings.EngineConf != null)
             {
-                string[] domain = dom.Split('|');
-                domains.Add(domain[1], domain[0]);
-                cbDomain.Items.Add(domain[0]);
-            }
-            if (Options.GeneralSettings.SelectedDomain != null)
-                cbDomain.SelectedItem = domains[Options.GeneralSettings.SelectedDomain];
+                languageDomainSupport = loadEngineConf(Options.GeneralSettings.EngineConf);
+                cbDomain.Items.Clear();
+                foreach (var domainName in languageDomainSupport.SupportedDomains.Keys)
+                {
+                    cbDomain.Items.Add(domainName);
+                }
 
+                cbDomain.SelectedItem = Options.GeneralSettings.SelectedDomainName;
+            }
         }
 
         private void localizeContent()
         {
-            this.Text = LocalizationHelper.Instance.GetResourceString("OptionsFormCaption");
-            this.lblURL.Text = LocalizationHelper.Instance.GetResourceString("URLLabelText");
-            this.lblAuth.Text = LocalizationHelper.Instance.GetResourceString("AuthLabelText");
-            this.lblSupportedLanguages.Text = LocalizationHelper.Instance.GetResourceString("SupportedLanguagesLabelText");
-            this.btnOK.Text = LocalizationHelper.Instance.GetResourceString("OkButtonText");
-            this.btnCancel.Text = LocalizationHelper.Instance.GetResourceString("CancelButtonText");
-            this.btnHelp.Text = LocalizationHelper.Instance.GetResourceString("HelpButtonText");
-            this.lblTagsFormatting.Text = LocalizationHelper.Instance.GetResourceString("TagsAndFormattingLabelText");
-            this.cbFormattingTags.Items.Add(LocalizationHelper.Instance.GetResourceString("FormattingAndTags"));     
+            Text = LocalizationHelper.Instance.GetResourceString("OptionsFormCaption");
+            lblURL.Text = LocalizationHelper.Instance.GetResourceString("URLLabelText");
+            lblAuth.Text = LocalizationHelper.Instance.GetResourceString("AuthLabelText");
+            lblSupportedLanguages.Text = LocalizationHelper.Instance.GetResourceString("SupportedLanguagesLabelText");
+            btnOK.Text = LocalizationHelper.Instance.GetResourceString("OkButtonText");
+            btnCancel.Text = LocalizationHelper.Instance.GetResourceString("CancelButtonText");   
         }
 
         private void tbURLAuth_TextChanged(object sender, EventArgs e)
@@ -92,51 +85,68 @@ namespace TartuNLP
         {
             //setControlsEnabledState(false);
             btnOK.Enabled = false;
-            lbLanguages.Items.Clear();
+            srcLanguages.Items.Clear();
+            tgtLanguages.Items.Clear();
             
             // do the update in the background
             languageDomainSupport = await updateConfig(tbURL.Text, tbAuth.Text);
             handleUpdateFinished();
         }
 
-        private async Task<LanguageDomainSupport> updateConfig(string url, string auth) {
-            var languageDomainSupport = new LanguageDomainSupport()
+        private LanguageDomainSupport loadEngineConf(EngineConf engineConf)
+        {
+            var config = new LanguageDomainSupport
             {
-                URL = url,
-                Auth = auth
+                EngineConf = engineConf,
+                UpdateSuccessful = true,
+                FormattingAndTagUsage = engineConf.xml_support,
+                SupportedDomains = new Dictionary<string, string>(),
+                SupportedLanguages = new Dictionary<string, Dictionary<string, List<string>>>()
             };
+            
+            foreach (var domain in engineConf.domains)
+            {
+                config.SupportedDomains.Add(domain.name, domain.code);
+                config.SupportedLanguages.Add(domain.code, new Dictionary<string, List<string>>());
+                foreach (var language in domain.languages)
+                {
+                    var languagePair = language.Split('-');
+                    if (!config.SupportedLanguages[domain.code].ContainsKey(languagePair[0]))
+                    {
+                        config.SupportedLanguages[domain.code].Add(languagePair[0], new List<string>());
+                    }
+
+                    config.SupportedLanguages[domain.code][languagePair[0]].Add(languagePair[1]);
+                }
+            }
+
+            return config;
+        }
+
+        private async Task<LanguageDomainSupport> updateConfig(string url, string auth) {
+            var config = new LanguageDomainSupport();
             try
             {
                 // try to get Configuration
                 // Do not call any blocking service in the user interface thread; it has to use background threads.
-                languageDomainSupport.JSON = await Task.Run(() => TartuNLPServiceHelper.getConfig(url, auth));
+                var engineConf = await Task.Run(() => TartuNLPServiceHelper.getConfig(url, auth));
 
-                if (languageDomainSupport.JSON == null)
+                if (engineConf == null)
                 {
                     //invalid user name or password
-                    languageDomainSupport.UpdateSuccessful = false;
+                    config.UpdateSuccessful = false;
                 }
                 else
                 {
-                    //successful login
-                    languageDomainSupport.UpdateSuccessful = true;
-
-                    //try to get the list of the Domain in the background
-                    languageDomainSupport.SupportedDomains = new Dictionary<string, string>();
-                    languageDomainSupport.SupportedLanguages = new Dictionary<string, string[]>();
-                    foreach (string key in languageDomainSupport.JSON.Keys)
-                    {
-                        languageDomainSupport.SupportedDomains.Add(languageDomainSupport.JSON[key][0],key);
-                        languageDomainSupport.SupportedLanguages.Add(languageDomainSupport.JSON[key][0], languageDomainSupport.JSON[key]);
-                    }
+                    config = loadEngineConf(engineConf);
                 }
-}
+            }
             catch (Exception ex)
             {
-                languageDomainSupport.Exception = ex;
+                config.Exception = ex;
             }
 
-            return languageDomainSupport;
+            return config;
         }
 
         private void handleUpdateFinished()
@@ -154,17 +164,17 @@ namespace TartuNLP
                 else if (!languageDomainSupport.UpdateSuccessful)
                 {
                     // the URL or Auth is invalid, display for the user
-                    string caption = LocalizationHelper.Instance.GetResourceString("InvalidURLorAuthCaption");
-                    string text = LocalizationHelper.Instance.GetResourceString("InvalidURLorAuthText");
+                    var caption = LocalizationHelper.Instance.GetResourceString("InvalidURLorAuthCaption");
+                    var text = LocalizationHelper.Instance.GetResourceString("InvalidURLorAuthText");
                     MessageBox.Show(this, text, caption, MessageBoxButtons.OK, MessageBoxIcon.Error);
                 }
                 else
                 {
                     // we have managed to get the supported Domain, display them in the combo box
                     cbDomain.Items.Clear();
-                    foreach (string dom in languageDomainSupport.SupportedDomains.Keys)
+                    foreach (var domainName in languageDomainSupport.SupportedDomains.Keys)
                     {
-                       cbDomain.Items.Add(dom);
+                       cbDomain.Items.Add(domainName);
                     }
                     cbDomain.SelectedIndex = 0;
 
@@ -174,87 +184,71 @@ namespace TartuNLP
 
         private void cbDomain_SelectedIndexChanged(object sender, EventArgs e)
         {
+            srcLanguages.Items.Clear();
             if (languageDomainSupport != null)
             {
+                var domain = languageDomainSupport.SupportedDomains[cbDomain.SelectedItem.ToString()];
+                srcLanguages.Items.Clear();
+                foreach (var language in languageDomainSupport.SupportedLanguages[domain])
+                {
+                    srcLanguages.Items.Add(language.Key);
+                }
+                srcLanguages.SelectedIndex = 0;
                 
-                lbLanguages.Items.Clear();
-                foreach (string language in languageDomainSupport.SupportedLanguages[this.cbDomain.SelectedItem.ToString()])
-                {
-                    lbLanguages.Items.Add(language);
-                }
-                lbLanguages.Items.RemoveAt(0);
-
-                btnOK.Enabled = languageDomainSupport.SupportedLanguages[this.cbDomain.SelectedItem.ToString()].Length > 0;
+                btnOK.Enabled = languageDomainSupport.SupportedLanguages[domain].Count > 0;
             }
-            else 
+        }
+        
+        private void srcLanguages_SelectedIndexChanged(object sender, EventArgs e)
+        {
+            tgtLanguages.Items.Clear();
+            if (languageDomainSupport != null)
             {
-                lbLanguages.Items.Clear();
-                IDictionary<string, string[]> supportedLanguages = new Dictionary<string, string[]>();
-                foreach (string languageList in Options.GeneralSettings.SupportedLanguages)
+                var domain = languageDomainSupport.SupportedDomains[cbDomain.SelectedItem.ToString()];
+                tgtLanguages.Items.Clear();
+                foreach (var language in languageDomainSupport.SupportedLanguages[domain][srcLanguages.SelectedItem.ToString()])
                 {
-                    string[] languages = languageList.Split('|');
-                    supportedLanguages.Add(languages[0], languages[1].Split(','));
+                    tgtLanguages.Items.Add(language);
                 }
-                foreach (string language in supportedLanguages[this.cbDomain.SelectedItem.ToString()])
-                {
-                    lbLanguages.Items.Add(language);
-                }
-                lbLanguages.Items.RemoveAt(0);
-
-                btnOK.Enabled = supportedLanguages[this.cbDomain.SelectedItem.ToString()].Length > 0;
             }
         }
 
 
         private void TartuNLPOptionsForm_FormClosing(object sender, FormClosingEventArgs e)
         {
-            if (DialogResult == System.Windows.Forms.DialogResult.OK)
+            if (DialogResult == DialogResult.OK)
             {
                 // if there was a modification, we have to save the changes
                 Options.SecureSettings.URL = tbURL.Text;
                 Options.SecureSettings.Auth = tbAuth.Text;
                 if (languageDomainSupport != null)
                 {
-                    int counter = 0;
-                    string[] supportedLanguages = new string[languageDomainSupport.SupportedLanguages.Count];
-                    foreach (KeyValuePair<string, string[]> langs in languageDomainSupport.SupportedLanguages) 
+                    var domain = languageDomainSupport.SupportedDomains[cbDomain.SelectedItem.ToString()];
+                    Options.GeneralSettings.EngineConf = languageDomainSupport.EngineConf;
+                    var languagePairs = new List<(string, string)>();
+                    foreach (var languagePair in languageDomainSupport.SupportedLanguages[domain])
                     {
-                        supportedLanguages[counter] = langs.Key + "|" + String.Join(",", langs.Value);
-                        counter++;
+                        foreach (var targetLang in languagePair.Value)
+                        {
+                            languagePairs.Add((languagePair.Key, targetLang));
+                        }
                     }
-                    Options.GeneralSettings.SupportedLanguages = supportedLanguages;
-                    string[] supportedDomains = new string[cbDomain.Items.Count];
-                    int count = 0;
-                    foreach (KeyValuePair<string, string> dom in languageDomainSupport.SupportedDomains)
+                    Options.GeneralSettings.SupportedLanguages = languagePairs.ToArray();
+                    Options.GeneralSettings.SelectedDomainCode = domain;
+                    Options.GeneralSettings.SelectedDomainName = cbDomain.SelectedItem.ToString();
+                    if (languageDomainSupport.FormattingAndTagUsage)
                     {
-                        supportedDomains[count] = dom.Key + "|" + dom.Value;
-                        count++;
+                        Options.GeneralSettings.FormattingAndTagUsage = FormattingAndTagsUsageOption.BothFormattingAndTags;
                     }
-                    Options.GeneralSettings.Domains = supportedDomains;
                 }
-                IDictionary<string,string> domains = new Dictionary<string, string>();
-                foreach (string dom in Options.GeneralSettings.Domains)
-                {
-                    string[] domain = dom.Split('|');
-                    domains.Add(domain[0], domain[1]);
-                }
-                Options.GeneralSettings.SelectedDomain = domains[this.cbDomain.SelectedItem.ToString()];
-                Options.GeneralSettings.FormattingAndTagUsage = (FormattingAndTagsUsageOption)cbFormattingTags.SelectedIndex;
-                this.lbLanguages.Items.Clear();    
+                srcLanguages.Items.Clear();
+                tgtLanguages.Items.Clear();
+                cbDomain.Items.Clear();
             }
         }
-        
-        private bool isShowHelpSupported()
-        {
-            // If the resource is remote and downloaded to an old client, it can happen that the client does not support ShowHelp yet.            
-            return environment.GetType().GetInterface(nameof(IEnvironment2)) != null;
-        }
 
-        private void btnHelp_Click(object sender, EventArgs e)
-        {
-            (environment as IEnvironment2)?.ShowHelp("googlemt-settings.html");
-        }
 
-        
+        private void TartuNLPOptionsForm_Load(object sender, EventArgs e)
+        {}
     }
 }

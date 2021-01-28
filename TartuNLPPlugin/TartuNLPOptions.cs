@@ -3,31 +3,20 @@
 namespace TartuNLP
 {
     /// <summary>
-    /// Class for storing the Dummy MT plugin settings.
+    /// Class for storing the MT plugin settings.
     /// </summary>
-    /// <remarks>
-    /// Implementation checklist:
-    ///     - There is an options class, with proper generic and secure subclasses (the secure options class can be omitted).
-	///     - The options class is a simple entity class, does not call any services, and simply gives back the saved or the default settings.
-	///     - The options class does not store/load its own settings.
-    /// </remarks>
     public class TartuNLPOptions : MemoQ.MTInterfaces.PluginSettingsObject<TartuNLPGeneralSettings, TartuNLPSecureSetting>
     {
         /// <summary>
         /// Create instance by deserializing from provided serialized settings.
         /// </summary>
-        public TartuNLPOptions(MemoQ.MTInterfaces.PluginSettings serializedSettings)
-            : base(serializedSettings)
-        {
-        }
+        public TartuNLPOptions(MemoQ.MTInterfaces.PluginSettings serializedSettings): base(serializedSettings){}
 
         /// <summary>
         /// Create instance by providing the settings objects.
         /// </summary>
         public TartuNLPOptions(TartuNLPGeneralSettings generalSettings, TartuNLPSecureSetting secureSettings)
-            : base(generalSettings, secureSettings)
-        {
-        }
+            : base(generalSettings, secureSettings){}
     }
 
     /// <summary>
@@ -35,10 +24,11 @@ namespace TartuNLP
     /// </summary>
     public class TartuNLPGeneralSettings
     {
-        public string[] SupportedLanguages = new string[0];
-        public FormattingAndTagsUsageOption FormattingAndTagUsage;
-        public string[] Domains = new string[0];
-        public string SelectedDomain;
+        public EngineConf EngineConf;
+        public FormattingAndTagsUsageOption FormattingAndTagUsage = FormattingAndTagsUsageOption.Plaintext;
+        public (string, string)[] SupportedLanguages;
+        public string SelectedDomainCode;
+        public string SelectedDomainName;
     }
 
     /// <summary>
@@ -46,9 +36,8 @@ namespace TartuNLP
     /// </summary>
     public enum FormattingAndTagsUsageOption
     {
-       // Plaintext = 0,
-        //OnlyFormatting = 1,
-        BothFormattingAndTags = 0,
+        Plaintext,
+        BothFormattingAndTags
     }
 
     /// <summary>
@@ -56,13 +45,7 @@ namespace TartuNLP
     /// </summary>
     public class TartuNLPSecureSetting
     {
-        /// <summary>
-        /// The user name used to be able to use the MT service.
-        /// </summary>
-        public string URL = "https://api.tartunlp.ai/v1.2/translate";
-        /// <summary>
-        /// The password used to be able to use the MT service.
-        /// </summary>
+        public string URL = "https://api.tartunlp.ai/v2.0/translate";
         public string Auth = "public";
     }
 }

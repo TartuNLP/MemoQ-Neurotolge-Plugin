@@ -1,4 +1,5 @@
 ﻿using System;
+using System.Collections.Generic;
 using System.Linq;
 using System.Net;
 using System.Text.RegularExpressions;
@@ -45,21 +46,25 @@ namespace TartuNLP
         /// <summary>
         /// Translates a single segment, possibly using a fuzzy TM hit for improvement
         /// </summary>
-        public TranslationResult TranslateCorrectSegment(Segment segm, Segment tmSource, Segment tmTarget)
+        public TranslationResult TranslateCorrectSegment(Segment segment, Segment tmSource, Segment tmTarget)
         {
-            TranslationResult result = new TranslationResult();
+            var result = new TranslationResult();
 
             try
             {
-                string textToTranslate = createTextFromSegment(segm, options.GeneralSettings.FormattingAndTagUsage);
-                string translation = TartuNLPServiceHelper.Translate(options, textToTranslate, this.srcLangCode, this.trgLangCode);
-                result.Translation = createSegmentFromResult(segm, translation, options.GeneralSettings.FormattingAndTagUsage);
+                var textsToTranslate = new List<string>(0)
+                {
+                    createTextFromSegment(segment, options.GeneralSettings.FormattingAndTagUsage)
+                };
+                var translation = TartuNLPServiceHelper.Translate(options, textsToTranslate, srcLangCode, trgLangCode)[0];
+                result.Translation = createSegmentFromResult(segment, translation, options.GeneralSettings.FormattingAndTagUsage);
             }
             catch (Exception e)
             {
                 // Use the MTException class is to wrap the original exceptions occurred during the translation.
-                string localizedMessage = LocalizationHelper.Instance.GetResourceString("NetworkError");
-                result.Exception = new MTException(string.Format(localizedMessage, e.Message), string.Format("A network error occured ({0}).", e.Message), e);
+                var localizedMessage = LocalizationHelper.Instance.GetResourceString("NetworkError");
+                result.Exception = new MTException(string.Format(localizedMessage, e.Message),
+                    $"A network error occured ({e.Message}).", e);
             }
 
             return result;
@@ -68,28 +73,28 @@ namespace TartuNLP
         /// <summary>
         /// Translates multiple segments, possibly using a fuzzy TM hit for improvement
         /// </summary>
-        public TranslationResult[] TranslateCorrectSegment(Segment[] segs, Segment[] tmSources, Segment[] tmTargets)
+        public TranslationResult[] TranslateCorrectSegment(Segment[] segments, Segment[] tmSources, Segment[] tmTargets)
         {
-            TranslationResult[] results = new TranslationResult[segs.Length];
-            for (int i = 0; i < segs.Length; i++)
+            var results = new TranslationResult[segments.Length];
+            for (var i = 0; i < segments.Length; i++)
             {
                 results[i] = new TranslationResult();
             }
 
             try
             {
-                var texts = segs.Select(s => createTextFromSegment(s, options.GeneralSettings.FormattingAndTagUsage)).ToList();
-                int i = 0;
-                foreach (string translation in TartuNLPServiceHelper.BatchTranslate(options, texts, this.srcLangCode, this.trgLangCode))
+                var texts = segments.Select(s => createTextFromSegment(s, options.GeneralSettings.FormattingAndTagUsage)).ToList();
+                var i = 0;
+                foreach (var translation in TartuNLPServiceHelper.Translate(options, texts, srcLangCode, trgLangCode))
                 {
-                    results[i].Translation = createSegmentFromResult(segs[i], translation, options.GeneralSettings.FormattingAndTagUsage);
+                    results[i].Translation = createSegmentFromResult(segments[i], translation, options.GeneralSettings.FormattingAndTagUsage);
                     i++;
                 }
             }
             catch (Exception e)
             {
                 // Use the MTException class is to wrap the original exceptions occurred during the translation.
-                foreach (TranslationResult result in results)
+                foreach (var result in results)
                 {
                     result.Exception = new MTException(e.Message, e.Message, e);
                 }
@@ -101,7 +106,8 @@ namespace TartuNLP
         /// <summary>
         /// Creates the text to translate from the segment according to the settings. Appends tags and formatting if needed.
         /// </summary>
-        private string createTextFromSegment(Segment segment, FormattingAndTagsUsageOption formattingAndTagOption)
+        private static string createTextFromSegment(Segment segment, 
+            FormattingAndTagsUsageOption formattingAndTagOption)
         {
             var text = WebUtility.HtmlDecode(SegmentXMLConverter.ConvertSegment2Xml(segment, true));
             text = Regex.Replace(text, "<spec_char val=\"<\"/>", "<spec_char val=\"&lt;\"/>");
@@ -109,7 +115,8 @@ namespace TartuNLP
             return text;
         }
 
-        private static Segment createSegmentFromResult(Segment originalSegment, string translatedText, FormattingAndTagsUsageOption formattingAndTagUsage)
+        private static Segment createSegmentFromResult(Segment originalSegment, string translatedText, 
+            FormattingAndTagsUsageOption formattingAndTagUsage)
         {
             return SegmentXMLConverter.ConvertXML2Segment(translatedText, originalSegment.ITags);
         }
@@ -120,33 +127,12 @@ namespace TartuNLP
 
         public void StoreTranslation(TranslationUnit transunit)
         {
-            try
-            {
-                TartuNLPServiceHelper.StoreTranslation(options, transunit.Source.PlainText, transunit.Target.PlainText, this.srcLangCode, this.trgLangCode);
-            }
-            catch (Exception e)
-            {
-                // Use the MTException class is to wrap the original exceptions occurred during the translation.
-                string localizedMessage = LocalizationHelper.Instance.GetResourceString("NetworkError");
-                throw new MTException(string.Format(localizedMessage, e.Message), string.Format("A network error occured ({0}).", e.Message), e);
-            }
+            
         }
 
         public int[] StoreTranslation(TranslationUnit[] transunits)
         {
-
-            try
-            {
-                return TartuNLPServiceHelper.BatchStoreTranslation(options,
-                                        transunits.Select(s => s.Source.PlainText).ToList(), transunits.Select(s => s.Target.PlainText).ToList(),
-                                        this.srcLangCode, this.trgLangCode);
-            }
-            catch (Exception e)
-            {
-                // Use the MTException class is to wrap the original exceptions occurred during the translation.
-                string localizedMessage = LocalizationHelper.Instance.GetResourceString("NetworkError");
-                throw new MTException(string.Format(localizedMessage, e.Message), string.Format("A network error occured ({0}).", e.Message), e);
-            }
+            return new int[0];
         }
 
         #endregion
