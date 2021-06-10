@@ -45,7 +45,7 @@ namespace TartuNLP
     /// </summary>
     public class TartuNLPSecureSetting
     {
-        public string URL = "https://api.tartunlp.ai/v2.0/translate";
+        public string URL = "https://api.tartunlp.ai/translation/v2";
         public string Auth = "public";
     }
 }

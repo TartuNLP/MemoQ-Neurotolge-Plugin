@@ -47,7 +47,7 @@ namespace TartuNLP
         protected override void OnLoad(EventArgs e)
         {
             base.OnLoad(e);
-            btnUpdate.Enabled = false;
+            btnUpdate.Enabled = true;
             tbURL.Text = Options.SecureSettings.URL;
             tbAuth.Text = Options.SecureSettings.Auth;
             btnOK.Enabled = !string.IsNullOrEmpty(Options.SecureSettings.URL);

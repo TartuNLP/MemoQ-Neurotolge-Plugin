@@ -143,6 +143,7 @@ namespace MT_SDK
             var actPlugin = lbPlugins.SelectedItem as IPluginInfo;
 
             // the selected plugin does not support the selected language pair
+            // TODO currently always false
             if (!actPlugin.IsLanguagePairSupported((cbSourceLanguage.SelectedItem as Language).LangCode, (cbTargetLanguage.SelectedItem as Language).LangCode))
             {
                 btnTranslate.Enabled = false;

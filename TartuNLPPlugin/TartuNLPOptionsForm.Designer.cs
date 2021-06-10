@@ -64,7 +64,7 @@
             this.tbURL.Name = "tbURL";
             this.tbURL.Size = new System.Drawing.Size(285, 20);
             this.tbURL.TabIndex = 1;
-            this.tbURL.Text = "https://api.tartunlp.ai/v2.0/translate";
+            this.tbURL.Text = "https://api.tartunlp.ai/translation/v2";
             this.tbURL.TextChanged += new System.EventHandler(this.tbURLAuth_TextChanged);
             // 
             // tbAuth
