@@ -2,46 +2,57 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug-v9.7</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{79FCC726-7F7C-45AC-9EAF-1F46E09F73B8}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TartuNLP</RootNamespace>
-    <AssemblyName>TartuNLP.v9.7</AssemblyName>
+    <AssemblyName Condition=" $(Configuration.Contains('v9.7')) ">TartuNLP.v9.7</AssemblyName>
+    <AssemblyName Condition=" $(Configuration.Contains('v9.3')) ">TartuNLP.v9.3</AssemblyName>
+    <AssemblyName Condition=" $(Configuration.Contains('v9.0')) ">TartuNLP.v9.0</AssemblyName>
+    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.7' " >..\bin\Release-v9.7\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.7' ">..\bin\Debug-v9.7\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.3' ">..\bin\Release-v9.3\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.3' ">..\bin\Debug-v9.3\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.0' ">..\bin\Release-v9.0\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.0' ">..\bin\Debug-v9.0\</OutputPath>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+  <PropertyGroup Condition=" '$(Platform)' == 'AnyCPU' ">
+    <ErrorReport>prompt</ErrorReport>
+    <WarningLevel>4</WarningLevel>
+    <Prefer32Bit>false</Prefer32Bit>
+  </PropertyGroup>
+  <PropertyGroup Condition=" $(Configuration.Contains('Debug')) ">
     <DebugSymbols>true</DebugSymbols>
     <DebugType>full</DebugType>
     <Optimize>false</Optimize>
-    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>DEBUG;TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
-  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+  <PropertyGroup Condition=" $(Configuration.Contains('Release'))">
     <DebugType>pdbonly</DebugType>
     <Optimize>true</Optimize>
-    <OutputPath>..\bin\</OutputPath>
     <DefineConstants>TRACE</DefineConstants>
-    <ErrorReport>prompt</ErrorReport>
-    <WarningLevel>4</WarningLevel>
-    <Prefer32Bit>false</Prefer32Bit>
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="MemoQ.Addins.Common">
-      <HintPath Condition="Exists('..\References')">..\References\MemoQ.Addins.Common.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\MemoQ.Addins.Common.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\MemoQ.Addins.Common.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\MemoQ.Addins.Common.dll</HintPath>
     </Reference>
     <Reference Include="MemoQ.MTInterfaces">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath Condition="Exists('..\References')">..\References\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\MemoQ.MTInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
-      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\Newtonsoft.Json.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />
