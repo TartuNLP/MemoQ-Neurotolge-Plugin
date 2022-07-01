@@ -2,21 +2,13 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug-v9.9</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{306EB2FC-4576-4B03-9E8A-7FCBE8734379}</ProjectGuid>
     <OutputType>Library</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>TartuNLPInterface</RootNamespace>
     <AssemblyName>TartuNLPInterface</AssemblyName>
-    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.9' ">..\bin\Release-v9.9\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.9' ">..\bin\Debug-v9.9\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.7' " >..\bin\Release-v9.7\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.7' ">..\bin\Debug-v9.7\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.3' ">..\bin\Release-v9.3\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.3' ">..\bin\Debug-v9.3\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.0' ">..\bin\Release-v9.0\</OutputPath>
-    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.0' ">..\bin\Debug-v9.0\</OutputPath>
     <TargetFrameworkVersion>v4.7.2</TargetFrameworkVersion>
     <FileAlignment>512</FileAlignment>
     <TargetFrameworkProfile />
@@ -37,12 +29,15 @@
     <Optimize>true</Optimize>
     <DefineConstants>TRACE</DefineConstants>
   </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Release|AnyCPU' ">
+    <OutputPath>..\bin\Release\</OutputPath>
+  </PropertyGroup>
+  <PropertyGroup Condition=" '$(Configuration)|$(Platform)' == 'Debug|AnyCPU' ">
+    <OutputPath>..\bin\Debug\</OutputPath>
+  </PropertyGroup>
   <ItemGroup>
     <Reference Include="Newtonsoft.Json">
-      <HintPath Condition=" $(Configuration.Contains('v9.9')) ">..\References-9.9\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\Newtonsoft.Json.dll</HintPath>
-      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\Newtonsoft.Json.dll</HintPath>
+      <HintPath>..\References\Newtonsoft.Json.dll</HintPath>
     </Reference>
     <Reference Include="System" />
     <Reference Include="System.Core" />

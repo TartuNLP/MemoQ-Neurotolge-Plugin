@@ -33,6 +33,6 @@ using MemoQ.Addins.Common.Framework;
 // by using the '*' as shown below:
 // [assembly: AssemblyVersion("1.0.*")]
 // TODO update version upon new release
-[assembly: AssemblyVersion("2.0.2.*")]
+[assembly: AssemblyVersion("2.1.0.*")]
 
 [assembly: Module(ModuleName = "TartuNLP", ClassName = "TartuNLP.TartuNLPPluginDirector")]
