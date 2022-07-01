@@ -2,13 +2,15 @@
 <Project ToolsVersion="12.0" DefaultTargets="Build" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
   <Import Project="$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props" Condition="Exists('$(MSBuildExtensionsPath)\$(MSBuildToolsVersion)\Microsoft.Common.props')" />
   <PropertyGroup>
-    <Configuration Condition=" '$(Configuration)' == '' ">Debug-v9.7</Configuration>
+    <Configuration Condition=" '$(Configuration)' == '' ">Debug-v9.9</Configuration>
     <Platform Condition=" '$(Platform)' == '' ">AnyCPU</Platform>
     <ProjectGuid>{77FC0E92-A49B-4650-BE0E-5779B29A3244}</ProjectGuid>
     <OutputType>WinExe</OutputType>
     <AppDesignerFolder>Properties</AppDesignerFolder>
     <RootNamespace>MT_SDK</RootNamespace>
     <AssemblyName>MT_SDK</AssemblyName>
+    <OutputPath Condition=" '$(Configuration)' == 'Release-v9.9' ">..\bin\Release-v9.9\</OutputPath>
+    <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.9' ">..\bin\Debug-v9.9\</OutputPath>
     <OutputPath Condition=" '$(Configuration)' == 'Release-v9.7' " >..\bin\Release-v9.7\</OutputPath>
     <OutputPath Condition=" '$(Configuration)' == 'Debug-v9.7' ">..\bin\Debug-v9.7\</OutputPath>
     <OutputPath Condition=" '$(Configuration)' == 'Release-v9.3' ">..\bin\Release-v9.3\</OutputPath>
@@ -37,22 +39,26 @@
   </PropertyGroup>
   <ItemGroup>
     <Reference Include="Kilgray.Utils">
+      <HintPath Condition=" $(Configuration.Contains('v9.9')) ">..\References-9.9\Kilgray.Utils.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\Kilgray.Utils.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\Kilgray.Utils.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\Kilgray.Utils.dll</HintPath>
     </Reference>
     <Reference Include="MemoQ.Addins.Common">
+      <HintPath Condition=" $(Configuration.Contains('v9.9')) ">..\References-9.9\MemoQ.Addins.Common.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\MemoQ.Addins.Common.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\MemoQ.Addins.Common.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\MemoQ.Addins.Common.dll</HintPath>
     </Reference>
     <Reference Include="MemoQ.MTInterfaces">
       <SpecificVersion>False</SpecificVersion>
-      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\MemoQ.MTInterfaces.dll.dll</HintPath>
-      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\MemoQ.MTInterfaces.dll.dll</HintPath>
-      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\MemoQ.MTInterfaces.dll.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.9')) ">..\References-9.9\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\MemoQ.MTInterfaces.dll</HintPath>
+      <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\MemoQ.MTInterfaces.dll</HintPath>
     </Reference>
     <Reference Include="Newtonsoft.Json">
+      <HintPath Condition=" $(Configuration.Contains('v9.9')) ">..\References-9.9\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.7')) ">..\References-9.7\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.3')) ">..\References-9.3\Newtonsoft.Json.dll</HintPath>
       <HintPath Condition=" $(Configuration.Contains('v9.0')) ">..\References-9.0\Newtonsoft.Json.dll</HintPath>
